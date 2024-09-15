@@ -5,7 +5,8 @@ import { TasksModule } from './tasks/tasks.module';
 import  {MongooseModule} from '@nestjs/mongoose';
 
 @Module({
-  imports: [MongooseModule.forRoot('mongodb://localhost/taskdb'),
+  imports: [MongooseModule.forRoot('mongodb://localhost/tasksdb')
+    ,
  TasksModule],
 })
 
