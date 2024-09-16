@@ -1,6 +1,6 @@
 const API = 'http://localhost:3000/api';
-import  { Task } from "../interface/task.interface";
-export const createTaskRequest = (task: Task) => {
+import  { CreateTask,  } from "../interface/task.interface";
+export const createTaskRequest = (task: CreateTask) => {
     console.log("Enviando tarea:", task);  // Verifica el contenido aquí
     return fetch(`${API}/tasks`, {
         method: 'POST',
@@ -10,3 +10,4 @@ export const createTaskRequest = (task: Task) => {
         },
     });
 }
+export const getTasksRequest = () => fetch(`${API}/tasks`);
