@@ -1,14 +1,18 @@
 import { createContext, useEffect, useState } from "react";
-import { createTaskRequest, getTasksRequest } from "../api/tasks";
-import { CreateTask, Task } from "../interface/task.interface";
+import { createTaskRequest, deleteTaskRequest, getTasksRequest, updateTaskRequest } from "../api/tasks";
+import { CreateTask, Task, UpdateTask } from "../interface/task.interface";
 
 interface TaskContextProps {
   tasks: Task[];
-  createTask: (task: CreateTask) => void;
+  createTask: (task: CreateTask) => Promise<void>;
+  deleteTask: (id: string) => Promise<void>;
+  updateTask: (id: string, task: UpdateTask) => Promise<void>;
 }
 export const TaskContext = createContext<TaskContextProps>({
   tasks: [],
-  createTask: () => {},
+ createTask : async () => {},
+ deleteTask: async () => {},
+ updateTask: async () => {},
 });
 interface Props {
   children: React.ReactNode;
@@ -24,19 +28,40 @@ export const TaskProvider: React.FC<Props> = ({ children }) => {
 
   // creando tarea para guardar el base de datos
    const createTask = async (task: CreateTask) => {
-    console.log(task);
-    console.log(task);
+    // console.log(task);
     const res = await createTaskRequest(task);
     const data = await res.json();
-    console.log(data);
+    // console.log(data);
     setTasks([...tasks, data]);
   };
+
+
+  const deleteTask = async(id: string) => {
+const res = await deleteTaskRequest(id);
+console.log(res);
+ if(res.status === 204){
+  setTasks(tasks.filter(task => task._id !== id));
+  };
+}
+
+const updateTask = async (id: string, task: UpdateTask) => {
+  const res = await updateTaskRequest(id, task);
+  const data = await res.json();
+
+  setTasks(
+    tasks.map((task) => (task._id === id ? {...task, ...data}: task))
+  );
+}
+   
+  
 
   return (
     <TaskContext.Provider
       value={{
         tasks,
         createTask,
+        deleteTask,
+        updateTask
       }}
     >
       {children}
